@@ -15,7 +15,7 @@ public class ServerUDP : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Udp);
+        clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
     }
 
     // Update is called once per frame
