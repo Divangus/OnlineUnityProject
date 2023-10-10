@@ -18,8 +18,8 @@ public class ServerTCP : MonoBehaviour
         clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
         // Define the IP address and port of the server you want to connect to
-        IPAddress serverIP = IPAddress.Parse("127.0.0.1"); // Replace with your server's IP
-        int serverPort = 8080; // Replace with your server's port
+        IPAddress serverIP = IPAddress.Parse("10.0.103.15"); // Replace with your server's IP
+        int serverPort = 29000; // Replace with your server's port
 
         // Create an endpoint that represents the server
         IPEndPoint serverEndPoint = new IPEndPoint(serverIP, serverPort);

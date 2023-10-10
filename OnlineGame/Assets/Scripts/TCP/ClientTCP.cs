@@ -17,7 +17,7 @@ public class ClientTCP : MonoBehaviour
 
         // Define the IP address and port of the server you want to connect to
         IPAddress serverIP = IPAddress.Parse("10.0.103.15"); // Replace with your server's IP
-        int serverPort = 8080; // Replace with your server's port
+        int serverPort = 29000; // Replace with your server's port
 
         // Create an endpoint that represents the server
         IPEndPoint serverEndPoint = new IPEndPoint(serverIP, serverPort);
