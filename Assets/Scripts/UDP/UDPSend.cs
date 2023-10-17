@@ -16,6 +16,8 @@ public class UDPSend : MonoBehaviour
     IPEndPoint remoteEndPoint;
     UdpClient udpClient;
 
+    string strMessage = "";
+
     private static void Main()
     {
         UDPSend sendObj = new UDPSend();
@@ -27,6 +29,26 @@ public class UDPSend : MonoBehaviour
     public void Start()
     {
         init();
+    }
+
+    // OnGUI
+    void OnGUI()
+    {
+        Rect rectObj = new Rect(40, 380, 200, 400);
+        GUIStyle style = new GUIStyle();
+        style.alignment = TextAnchor.UpperLeft;
+        GUI.Box(rectObj, "# UDPSend-Data\n127.0.0.1 " + port + " #\n"
+                    + "shell> nc -lu 127.0.0.1  " + port + " \n"
+                , style);
+
+        // ------------------------
+        // send it
+        // ------------------------
+        strMessage = GUI.TextField(new Rect(40, 420, 140, 20), strMessage);
+        if (GUI.Button(new Rect(190, 420, 40, 20), "send"))
+        {
+            SendString(strMessage + "\n");
+        }
     }
 
     public void init()
