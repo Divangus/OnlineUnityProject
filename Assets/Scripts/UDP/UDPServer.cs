@@ -15,6 +15,10 @@ public class UDPServer : MonoBehaviour
 
     void Start()
     {
+        Socket newSocket;
+
+        Socket newSocket = new Socket(AddressFamily.InterNetwork,SocketType.Dgram, ProtocolType.Udp);
+
         Debug.Log("UDP Server started.");
 
         // Create a new UDP server and bind it to a specific port
