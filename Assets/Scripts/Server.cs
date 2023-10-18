@@ -1,3 +1,4 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,61 +10,39 @@ using System.Threading;
 
 public class Server : MonoBehaviour
 {
+
+    Socket newSocket;
     // Start is called before the first frame update
+    int port = 9050;
+    byte[] data = new byte[1024];
+    int recv;
+
     void Start()
     {
-        byte[] data = new byte[1024];
-        string input, stringData;
-        IPEndPoint ipep = new IPEndPoint(
-                        IPAddress.Parse("127.0.0.1"), 9050);
+        Debug.Log("Start");
+        Thread listenThread;
 
-        Socket server = new Socket(AddressFamily.InterNetwork,
-                       SocketType.Dgram, ProtocolType.Udp);
+        IPEndPoint ipep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
 
+        newSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+        newSocket.Bind(ipep);
 
-        string welcome = "Hello, are you there?";
-        data = Encoding.ASCII.GetBytes(welcome);
-        server.SendTo(data, data.Length, SocketFlags.None, ipep);
+        listenThread = new Thread(ReceiveData);
+        listenThread.Start();
+        // newSocket.SendTo(data, recv, SocketFlags.None, Remote);
 
-        IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
-        EndPoint Remote = (EndPoint)sender;
-
-        data = new byte[1024];
-        int recv = server.ReceiveFrom(data, ref Remote);
-
-        Console.WriteLine("Message received from {0}:", Remote.ToString());
-        Console.WriteLine(Encoding.ASCII.GetString(data, 0, recv));
-
-
-        receiveThread = new Thread(ReceiveData);
-        receiveThread.Start();
     }
-
 
     private void ReceiveData()
     {
-        while (true)
-        {
-            data = new byte[1024];
-            recv = newsock.ReceiveFrom(data, ref Remote);
+        Debug.Log("Receive");
+        IPEndPoint sender = new IPEndPoint(IPAddress.Any, port);
+        EndPoint Remote = (EndPoint)(sender);
+        recv = newSocket.ReceiveFrom(data, ref Remote);
 
-            Console.WriteLine(Encoding.ASCII.GetString(data, 0, recv));
-            newsock.SendTo(data, recv, SocketFlags.None, Remote);
-        }
-        OnDestroy();
+        string welcome = "Welcome to my test server";
+        data = Encoding.ASCII.GetBytes(welcome);
+        newSocket.SendTo(data, data.Length, SocketFlags.None, Remote);
+        //newSocket.Close();
     }
-
-    void OnDestroy()
-    {
-        if (server != null)
-        {
-            server.Close();
-        }
-
-        if (receiveThread != null)
-        {
-            receiveThread.Abort();
-        }
-    }
-
 }
