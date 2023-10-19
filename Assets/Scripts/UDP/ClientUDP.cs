@@ -40,7 +40,7 @@ public class ClientUDP : MonoBehaviour
         EndPoint Remote = (EndPoint)sender;
 
         data = new byte[1024];
-        int recv = newSocket.ReceiveFrom(data, ref Remote);
+        recv = newSocket.ReceiveFrom(data, ref Remote);
 
         Debug.Log("Message received from:"+ Remote.ToString());
         Debug.Log(Encoding.ASCII.GetString(data, 0, recv));
