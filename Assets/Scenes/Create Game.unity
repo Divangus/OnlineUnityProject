@@ -123,6 +123,50 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &564527028
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 564527030}
+  - component: {fileID: 564527029}
+  m_Layer: 0
+  m_Name: ClientTCP
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &564527029
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 564527028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adb0a8adcdbc4484c926892c4e20bd07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &564527030
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 564527028}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 634.7596, y: 390.81345, z: -102.38423}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1060881407
 GameObject:
   m_ObjectHideFlags: 0
@@ -225,9 +269,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1378548020}
   - component: {fileID: 1378548021}
-  - component: {fileID: 1378548022}
   m_Layer: 0
-  m_Name: Server
+  m_Name: ServerUDP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -260,18 +303,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fce795fc5998894fa030b065f837806, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1378548022
+--- !u!1 &1582790626
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1582790628}
+  - component: {fileID: 1582790627}
+  m_Layer: 0
+  m_Name: ServerTCP
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &1582790627
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1378548019}
-  m_Enabled: 0
+  m_GameObject: {fileID: 1582790626}
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e238803a80c2e2a4d950913cf7e0f393, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &1582790628
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1582790626}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 634.7596, y: 390.81345, z: -102.38423}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1638276690
 GameObject:
   m_ObjectHideFlags: 0
@@ -376,9 +451,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2107117780}
   - component: {fileID: 2107117781}
-  - component: {fileID: 2107117782}
   m_Layer: 0
-  m_Name: Client
+  m_Name: ClientUDP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -409,17 +483,5 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1df3e1d9582a86442b254814f30b90b5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2107117782
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2107117778}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: adb0a8adcdbc4484c926892c4e20bd07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

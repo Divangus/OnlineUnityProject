@@ -13,11 +13,12 @@ public class ServerTCP : MonoBehaviour
     int port = 9050;
     byte[] data = new byte[1024];
     int recv;
+    Thread listenThread;
 
     void Start()
     {
         Debug.Log("Start");
-        Thread listenThread;
+        
 
         IPEndPoint ipep = new IPEndPoint(IPAddress.Any, port);
 
@@ -44,5 +45,18 @@ public class ServerTCP : MonoBehaviour
 
         client.Send(data, data.Length, SocketFlags.None);
         recv = client.Receive(data);
+    }
+
+    void OnApplicationQuit()
+    {
+        try
+        {
+            newsock.Close();
+            listenThread.Abort();
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+        }
     }
 }

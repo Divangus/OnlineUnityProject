@@ -15,12 +15,13 @@ public class ClientTCP : MonoBehaviour
     string input;
     string stringData;
     IPEndPoint ipep;
+    Thread listenThread;
     // Start is called before the first frame update
     void Start()
     {
         Debug.Log("Start");
 
-        Thread listenThread;
+        
 
         ipep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 9050);
 
@@ -49,5 +50,18 @@ public class ClientTCP : MonoBehaviour
 
         stringData = Encoding.ASCII.GetString(data, 0, recv);
         Debug.Log(stringData);
+    }
+
+    void OnApplicationQuit()
+    {
+        try
+        {
+            server.Close();
+            listenThread.Abort();
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+        }
     }
 }
