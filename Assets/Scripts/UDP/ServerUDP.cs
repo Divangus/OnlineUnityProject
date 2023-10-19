@@ -8,7 +8,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 
-public class Server : MonoBehaviour
+public class ServerUD : MonoBehaviour
 {
 
     Socket newSocket;
