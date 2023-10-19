@@ -22,7 +22,7 @@ public class ClientTCP : MonoBehaviour
 
         Thread listenThread;
 
-        ipep = new IPEndPoint(IPAddress.Parse("10.0.203.33"), 9050);
+        ipep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 9050);
 
         server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
