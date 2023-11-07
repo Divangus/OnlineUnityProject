@@ -20,7 +20,7 @@ public class ClientUDP : MonoBehaviour
     {
         Debug.Log("Start");
 
-        ipep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 9050);
+        ipep = new IPEndPoint(IPAddress.Parse("10.0.103.23"), 9050);
 
         newSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 

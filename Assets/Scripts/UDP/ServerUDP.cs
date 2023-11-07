@@ -22,7 +22,7 @@ public class ServerUDP : MonoBehaviour
         Debug.Log("Start");
        
 
-        IPEndPoint ipep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
+        IPEndPoint ipep = new IPEndPoint(IPAddress.Parse("10.0.103.23"), port);
 
         newSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
         newSocket.Bind(ipep);
