@@ -23,10 +23,16 @@ public class ClientUDP : MonoBehaviour
     void Start()
     {
 
-        Join();
-
     }
-    
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Return) && !string.IsNullOrEmpty(ipAddressText.text))
+        {
+            input = ipAddressText.text;
+            Debug.Log("Input: " + input);
+            Join();
+        }
+    }
     private void Join()
     {
         Debug.Log("Start");
