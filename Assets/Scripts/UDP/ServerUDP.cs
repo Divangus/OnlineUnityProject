@@ -7,6 +7,8 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using TMPro;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class ServerUDP : MonoBehaviour
 {
@@ -71,7 +73,12 @@ public class ServerUDP : MonoBehaviour
         string welcome = "Welcome to my test server";
         data = Encoding.ASCII.GetBytes(welcome);
         newSocket.SendTo(data, data.Length, SocketFlags.None, Remote);
+
+        string startMessage = "Start";
+        data = Encoding.ASCII.GetBytes(startMessage);
+        newSocket.SendTo(data, data.Length, SocketFlags.None, Remote);
     }
+
 
     void OnApplicationQuit()
     {

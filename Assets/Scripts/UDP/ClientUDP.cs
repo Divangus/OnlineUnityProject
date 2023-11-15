@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class ClientUDP : MonoBehaviour
 {
@@ -67,6 +68,16 @@ public class ClientUDP : MonoBehaviour
 
             // Update the connection status text
             connectionStatusText.text = "Connected";
+
+            recv = newSocket.ReceiveFrom(data, ref Remote);
+            string startMessage = Encoding.ASCII.GetString(data, 0, recv);
+            Debug.Log("Start message from server: " + startMessage);
+
+            if (startMessage == "Start")
+            {
+                // Load the next scene (you can replace "YourSceneName" with the actual scene name)
+                SceneManager.LoadScene("MainScene");
+            }
 
         }
         catch (Exception e)
