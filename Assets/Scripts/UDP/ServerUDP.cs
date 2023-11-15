@@ -6,31 +6,59 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using TMPro;
 
 public class ServerUDP : MonoBehaviour
 {
-
     Socket newSocket;
-    // Start is called before the first frame update
     int port = 9050;
     byte[] data = new byte[1024];
     int recv;
     Thread listenThread;
-
+    public TMP_Text ipAddressText;
     void Start()
     {
         Debug.Log("Start");
-       
 
-        IPEndPoint ipep = new IPEndPoint(IPAddress.Parse("10.0.103.23"), port);
+        // Obtén la dirección IP local de la máquina automáticamente
+        string localIP = GetLocalIPAddress();
+        ipAddressText.text = "Local IP: " + localIP;
+        Debug.Log("Local IP Address: " + localIP);
+
+        IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(localIP), port);
 
         newSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
         newSocket.Bind(ipep);
 
         listenThread = new Thread(ReceiveData);
         listenThread.Start();
-        // newSocket.SendTo(data, recv, SocketFlags.None, Remote);
+    }
 
+    private string GetLocalIPAddress()
+    {
+        string localIP = "127.0.0.1"; // Dirección IP de loopback como valor predeterminado
+
+        try
+        {
+            // Obtiene las direcciones IP de todas las interfaces de red
+            IPAddress[] addresses = Dns.GetHostAddresses(Dns.GetHostName());
+
+            // Encuentra la primera dirección IP válida que no sea de loopback
+            foreach (IPAddress address in addresses)
+            {
+                if (address.AddressFamily == AddressFamily.InterNetwork && !IPAddress.IsLoopback(address))
+                {
+                    localIP = address.ToString();
+                    break;
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Error al obtener la dirección IP local: " + e.Message);
+        }
+
+        return localIP;
     }
 
     private void ReceiveData()
@@ -43,7 +71,6 @@ public class ServerUDP : MonoBehaviour
         string welcome = "Welcome to my test server";
         data = Encoding.ASCII.GetBytes(welcome);
         newSocket.SendTo(data, data.Length, SocketFlags.None, Remote);
-        //newSocket.Close();
     }
 
     void OnApplicationQuit()

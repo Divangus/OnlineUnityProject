@@ -6,6 +6,8 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using TMPro;
+using SerializableCallback;
 
 public class ClientUDP : MonoBehaviour
 {
@@ -15,20 +17,28 @@ public class ClientUDP : MonoBehaviour
     string stringData;
     IPEndPoint ipep;
     Thread listenThread;
+    public TMP_InputField ipAddressText;
+    private string input;
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("Start");
 
-        ipep = new IPEndPoint(IPAddress.Parse("10.0.103.23"), 9050);
+        Join();
+
+    }
+    
+    private void Join()
+    {
+        Debug.Log("Start");
+        
+
+        ipep = new IPEndPoint(IPAddress.Parse(input), 9050);
 
         newSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
         listenThread = new Thread(ReceiveData);
         listenThread.Start();
-
     }
-
     private void ReceiveData()
     {
         string welcome = "Hello, are you there?";
@@ -57,5 +67,10 @@ public class ClientUDP : MonoBehaviour
         {
             Debug.Log(e.Message);
         }
+    }
+    public void ReadStringInputstring(string s)
+    {
+        input = s;
+        Debug.Log(input);
     }
 }
