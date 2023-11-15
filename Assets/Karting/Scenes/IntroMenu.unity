@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.1802838, g: 0.22571477, b: 0.30692255, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028408, g: 0.2257152, b: 0.3069231, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -778,6 +778,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df3e1d9582a86442b254814f30b90b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ipAddressText: {fileID: 0}
 --- !u!4 &675787570
 Transform:
   m_ObjectHideFlags: 0
@@ -822,6 +823,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fce795fc5998894fa030b065f837806, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ipAddressText: {fileID: 0}
 --- !u!4 &869046851
 Transform:
   m_ObjectHideFlags: 0
@@ -1190,7 +1192,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fb0be89f0d0b38469396506a9e54beb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SceneName: MainScene
+  SceneName: Client
 --- !u!114 &1209903099
 MonoBehaviour:
   m_ObjectHideFlags: 0
