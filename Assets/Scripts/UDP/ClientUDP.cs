@@ -7,7 +7,6 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using TMPro;
-using SerializableCallback;
 
 public class ClientUDP : MonoBehaviour
 {
@@ -18,12 +17,15 @@ public class ClientUDP : MonoBehaviour
     IPEndPoint ipep;
     Thread listenThread;
     public TMP_InputField ipAddressText;
+    public TextMeshProUGUI connectionStatusText; // Reference to the TextMeshPro object
     private string input;
+
     // Start is called before the first frame update
     void Start()
     {
-
+        connectionStatusText.text = "Not Connected"; // Initial status
     }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Return) && !string.IsNullOrEmpty(ipAddressText.text))
@@ -33,10 +35,10 @@ public class ClientUDP : MonoBehaviour
             Join();
         }
     }
+
     private void Join()
     {
         Debug.Log("Start");
-        
 
         ipep = new IPEndPoint(IPAddress.Parse(input), 9050);
 
@@ -45,21 +47,32 @@ public class ClientUDP : MonoBehaviour
         listenThread = new Thread(ReceiveData);
         listenThread.Start();
     }
+
     private void ReceiveData()
     {
-        string welcome = "Hello, are you there?";
-        data = Encoding.ASCII.GetBytes(welcome);
-        newSocket.SendTo(data, data.Length, SocketFlags.None, ipep);
+        try
+        {
+            string welcome = "Hello, are you there?";
+            data = Encoding.ASCII.GetBytes(welcome);
+            newSocket.SendTo(data, data.Length, SocketFlags.None, ipep);
 
-        IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
-        EndPoint Remote = (EndPoint)sender;
+            IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
+            EndPoint Remote = (EndPoint)sender;
 
-        data = new byte[1024];
-        recv = newSocket.ReceiveFrom(data, ref Remote);
+            data = new byte[1024];
+            recv = newSocket.ReceiveFrom(data, ref Remote);
 
-        Debug.Log("Message received from:" + Remote.ToString());
-        Debug.Log(Encoding.ASCII.GetString(data, 0, recv));
-        //newSocket.Close();
+            Debug.Log("Message received from:" + Remote.ToString());
+            Debug.Log(Encoding.ASCII.GetString(data, 0, recv));
+
+            // Update the connection status text
+            connectionStatusText.text = "Connected";
+
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+        }
     }
 
     void OnApplicationQuit()
@@ -74,6 +87,7 @@ public class ClientUDP : MonoBehaviour
             Debug.Log(e.Message);
         }
     }
+
     public void ReadStringInputstring(string s)
     {
         input = s;
