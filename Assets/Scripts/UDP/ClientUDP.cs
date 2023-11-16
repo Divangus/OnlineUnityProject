@@ -17,7 +17,7 @@ public class ClientUDP : MonoBehaviour
     string stringData;
     IPEndPoint ipep;
     Thread listenThread;
-    IPEndPoint sender ;
+    IPEndPoint sender;
     EndPoint Remote;
 
     public TMP_InputField ipAddressText;
@@ -26,7 +26,6 @@ public class ClientUDP : MonoBehaviour
     public GameObject player2;
     private GameObject instantiatedPlayer1;
     private GameObject instantiatedPlayer2;
-
 
     private string input;
 
@@ -54,10 +53,13 @@ public class ClientUDP : MonoBehaviour
 
         yield return null;
 
-        StartCoroutine(ReceiveData());
+        // Start a thread for network operations
+        listenThread = new Thread(NetworkThreadFunction);
+        listenThread.IsBackground = true;
+        listenThread.Start();
     }
 
-    private IEnumerator ReceiveData()
+    private void NetworkThreadFunction()
     {
         try
         {
@@ -74,32 +76,42 @@ public class ClientUDP : MonoBehaviour
             Debug.Log("Message received from:" + Remote.ToString());
             Debug.Log(Encoding.ASCII.GetString(data, 0, recv));
 
-            // Update the connection status text
-            connectionStatusText.text = "Connected";
+            // Update UI on the main thread
+            UnityMainThreadDispatcher.Instance().Enqueue(() =>
+            {
+                connectionStatusText.text = "Connected";
+            });
 
             recv = newSocket.ReceiveFrom(data, ref Remote);
             string startMessage = Encoding.ASCII.GetString(data, 0, recv);
             Debug.Log("Start message from server: " + startMessage);
 
+            UnityMainThreadDispatcher.Instance().Enqueue(() =>
+            {
+                if (startMessage == "Start")
+                {
+                    instantiatedPlayer1 = Instantiate(player1, new Vector3(-10, 0, 11), Quaternion.identity);
+                    instantiatedPlayer2 = Instantiate(player2, new Vector3(10, 0, 11), Quaternion.identity);
+                }
+            });
+
             recv = newSocket.ReceiveFrom(data, ref Remote);
             string gameMessage = Encoding.ASCII.GetString(data, 0, recv);
             Debug.Log("Start message from server: " + gameMessage);
 
-            if (startMessage == "Start")
+            // Update UI and instantiate players on the main thread
+            UnityMainThreadDispatcher.Instance().Enqueue(() =>
             {
-                instantiatedPlayer1 = Instantiate(player1, new Vector3(-10, 0, 11), Quaternion.identity);
-                instantiatedPlayer2 = Instantiate(player2, new Vector3(10, 0, 11), Quaternion.identity);
-            }
-            if (gameMessage == "Game")
-            {
-                SceneManager.LoadScene("MainScene");
-            }
+                if (gameMessage == "Game")
+                {
+                    SceneManager.LoadScene("MainScene");
+                }
+            });
         }
         catch (Exception e)
         {
             Debug.Log(e.Message);
         }
-        yield return null;
     }
 
     void OnApplicationQuit()
