@@ -17,12 +17,12 @@ public class ServerUDP : MonoBehaviour
     byte[] data = new byte[1024];
     int recv;
     Thread listenThread;
-
     public TMP_Text ipAddressText;
     void Start()
     {
         Debug.Log("Start");
 
+        // Obtén la dirección IP local de la máquina automáticamente
         string localIP = GetLocalIPAddress();
         ipAddressText.text = "Local IP: " + localIP;
         Debug.Log("Local IP Address: " + localIP);
@@ -38,12 +38,14 @@ public class ServerUDP : MonoBehaviour
 
     private string GetLocalIPAddress()
     {
-        string localIP = "127.0.0.1"; 
+        string localIP = "127.0.0.1"; // Dirección IP de loopback como valor predeterminado
 
         try
         {
+            // Obtiene las direcciones IP de todas las interfaces de red
             IPAddress[] addresses = Dns.GetHostAddresses(Dns.GetHostName());
 
+            // Encuentra la primera dirección IP válida que no sea de loopback
             foreach (IPAddress address in addresses)
             {
                 if (address.AddressFamily == AddressFamily.InterNetwork && !IPAddress.IsLoopback(address))
