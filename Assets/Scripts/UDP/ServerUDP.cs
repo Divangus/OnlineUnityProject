@@ -77,7 +77,7 @@ public class ServerUDP : MonoBehaviour
         data = Encoding.ASCII.GetBytes(startMessage);
         newSocket.SendTo(data, data.Length, SocketFlags.None, Remote);
 
-        startMessage = "Game";
+        startMessage = "Game2";
         data = Encoding.ASCII.GetBytes(startMessage);
         newSocket.SendTo(data, data.Length, SocketFlags.None, Remote);
 
