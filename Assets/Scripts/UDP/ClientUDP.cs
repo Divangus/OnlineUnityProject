@@ -17,14 +17,19 @@ public class ClientUDP : MonoBehaviour
     string stringData;
     IPEndPoint ipep;
     Thread listenThread;
+
     public TMP_InputField ipAddressText;
-    public TextMeshProUGUI connectionStatusText; // Reference to the TextMeshPro object
+    public TextMeshProUGUI connectionStatusText;
+    public GameObject spherePrefab; // Reference to the prefab of the sphere
+    private GameObject instantiatedSphere;
+
+
     private string input;
 
     // Start is called before the first frame update
     void Start()
     {
-        connectionStatusText.text = "Not Connected"; // Initial status
+        connectionStatusText.text = "Not Connected";
     }
 
     void Update()
@@ -75,8 +80,8 @@ public class ClientUDP : MonoBehaviour
 
             if (startMessage == "Start")
             {
-                // Load the next scene (you can replace "YourSceneName" with the actual scene name)
-                SceneManager.LoadScene("MainScene");
+                //SceneManager.LoadScene("MainScene");
+                instantiatedSphere = Instantiate(spherePrefab, new Vector3(0, 1, 0), Quaternion.identity);
             }
 
         }
