@@ -81,6 +81,10 @@ public class ClientUDP : MonoBehaviour
             {
                 instantiatedSphere = Instantiate(spherePrefab, new Vector3(0, 1, 0), Quaternion.identity);
             }
+            if (startMessage == "Game")
+            {
+                SceneManager.LoadScene("MainScene");
+            }
         }
         catch (Exception e)
         {

@@ -1,14 +1,11 @@
 using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class ServerUDP : MonoBehaviour
 {
@@ -19,6 +16,10 @@ public class ServerUDP : MonoBehaviour
     Thread listenThread;
 
     public TMP_Text ipAddressText;
+
+    // Reference to the UI button in the Unity editor
+    public Button sendMessageButton;
+
     void Start()
     {
         Debug.Log("Start");
@@ -34,6 +35,9 @@ public class ServerUDP : MonoBehaviour
 
         listenThread = new Thread(ReceiveData);
         listenThread.Start();
+
+        // Add a listener to the button click event
+        sendMessageButton.onClick.AddListener(SendMessageToClient);
     }
 
     private string GetLocalIPAddress()
@@ -53,9 +57,9 @@ public class ServerUDP : MonoBehaviour
                 }
             }
         }
-        catch (Exception e)
+        catch (System.Exception e)
         {
-            Debug.LogError("Error al obtener la dirección IP local: " + e.Message);
+            Debug.LogError("Error getting local IP address: " + e.Message);
         }
 
         return localIP;
@@ -77,6 +81,27 @@ public class ServerUDP : MonoBehaviour
         newSocket.SendTo(data, data.Length, SocketFlags.None, Remote);
     }
 
+    private void SendMessageToClient()
+    {
+        try
+        {
+            // Message to be sent
+            string message = "Game";
+
+            // Convert the message to bytes
+            byte[] messageData = Encoding.ASCII.GetBytes(message);
+
+            // Broadcast the message to all connected clients
+            EndPoint clientEndPoint = new IPEndPoint(IPAddress.Broadcast, port);
+            newSocket.SendTo(messageData, messageData.Length, SocketFlags.None, clientEndPoint);
+
+            Debug.Log("Message sent to all connected clients: " + message);
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError("Error sending message to clients: " + e.Message);
+        }
+    }
 
     void OnApplicationQuit()
     {
@@ -85,9 +110,9 @@ public class ServerUDP : MonoBehaviour
             newSocket.Close();
             listenThread.Abort();
         }
-        catch (Exception e)
+        catch (System.Exception e)
         {
-            Debug.Log(e.Message);
+            Debug.LogError(e.Message);
         }
     }
 }
