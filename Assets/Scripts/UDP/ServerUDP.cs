@@ -17,7 +17,6 @@ public class ServerUDP : MonoBehaviour
 
     public TMP_Text ipAddressText;
 
-    // Reference to the UI button in the Unity editor
     public Button sendMessageButton;
 
     void Start()
@@ -77,8 +76,6 @@ public class ServerUDP : MonoBehaviour
         string startMessage = "Start";
         data = Encoding.ASCII.GetBytes(startMessage);
         newSocket.SendTo(data, data.Length, SocketFlags.None, Remote);
-
-        Thread.Sleep(1000);
 
         startMessage = "Game";
         data = Encoding.ASCII.GetBytes(startMessage);
