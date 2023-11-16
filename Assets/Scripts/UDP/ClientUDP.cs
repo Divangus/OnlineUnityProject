@@ -19,7 +19,11 @@ public class ClientUDP : MonoBehaviour
     Thread listenThread;
 
     public TMP_InputField ipAddressText;
-    public TextMeshProUGUI connectionStatusText; 
+    public TextMeshProUGUI connectionStatusText;
+    public GameObject spherePrefab; // Reference to the prefab of the sphere
+    private GameObject instantiatedSphere;
+
+
     private string input;
 
     // Start is called before the first frame update
@@ -76,7 +80,8 @@ public class ClientUDP : MonoBehaviour
 
             if (startMessage == "Start")
             {
-                SceneManager.LoadScene("MainScene");
+                //SceneManager.LoadScene("MainScene");
+                instantiatedSphere = Instantiate(spherePrefab, new Vector3(0, 1, 0), Quaternion.identity);
             }
 
         }
