@@ -15,7 +15,6 @@ public class ServerUDP : MonoBehaviour
     byte[] data = new byte[1024];
     int recv;
     Thread listenThread;
-    private EndPoint Remote;
 
     public TMP_Text ipAddressText;
 
@@ -82,23 +81,6 @@ public class ServerUDP : MonoBehaviour
         data = Encoding.ASCII.GetBytes(startMessage);
         newSocket.SendTo(data, data.Length, SocketFlags.None, Remote);
 
-        sendMessageButton.onClick.AddListener(SendMessageToClient);
-    }
-
-    private void SendMessageToClient()
-    {
-        try
-        {
-            string message = "Start";
-            data = Encoding.ASCII.GetBytes(message);
-            newSocket.SendTo(data, data.Length, SocketFlags.None, Remote);
-
-            Debug.Log("Message sent to all connected clients: " + message);
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogError("Error sending message to clients: " + e.Message);
-        }
     }
 
     void OnApplicationQuit()
