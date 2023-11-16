@@ -14,6 +14,7 @@ public class ServerUDP : MonoBehaviour
     byte[] data = new byte[1024];
     int recv;
     Thread listenThread;
+    Thread playGame;
 
     public TMP_Text ipAddressText;
 
@@ -22,6 +23,8 @@ public class ServerUDP : MonoBehaviour
     IPEndPoint ipep;
     IPEndPoint sender;
     EndPoint Remote;
+
+    private bool playGameThreadRunning = false;
 
     void Start()
     {
@@ -38,9 +41,26 @@ public class ServerUDP : MonoBehaviour
 
         listenThread = new Thread(ReceiveData);
         listenThread.Start();
-
+        playGame = new Thread(playCounter);
     }
 
+    private void Update()
+    {
+        if (playGameThreadRunning)
+        {
+            playGame.Start();
+            // Reset the flag to avoid continuous execution
+            playGameThreadRunning = false;
+        }
+    }
+
+    void playCounter()
+    {
+        Debug.Log("aqui");
+        string startMessage = "Game";
+        data = Encoding.ASCII.GetBytes(startMessage);
+        newSocket.SendTo(data, data.Length, SocketFlags.None, Remote);
+    }
     private string GetLocalIPAddress()
     {
         string localIP = "127.0.0.1";
@@ -81,11 +101,13 @@ public class ServerUDP : MonoBehaviour
         data = Encoding.ASCII.GetBytes(startMessage);
         newSocket.SendTo(data, data.Length, SocketFlags.None, Remote);
 
-        startMessage = "Game2";
-        data = Encoding.ASCII.GetBytes(startMessage);
-        newSocket.SendTo(data, data.Length, SocketFlags.None, Remote);
 
+    }
 
+    public void OnButtonClick()
+    {
+        // Toggle the playGameThreadRunning flag
+        playGameThreadRunning = !playGameThreadRunning;
     }
 
     void OnApplicationQuit()
