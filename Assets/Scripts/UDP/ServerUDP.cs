@@ -49,7 +49,6 @@ public class ServerUDP : MonoBehaviour
         if (playGameThreadRunning)
         {
             playGame.Start();
-            // Reset the flag to avoid continuous execution
             playGameThreadRunning = false;
         }
     }
