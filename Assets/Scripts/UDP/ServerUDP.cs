@@ -89,14 +89,14 @@ public class ServerUDP : MonoBehaviour
         data = Encoding.ASCII.GetBytes(startMessage);
         newSocket.SendTo(data, data.Length, SocketFlags.None, Remote);
 
-        if (startMessageSent)
-        {
+       
+            Debug.Log("funciona?");
             string gameStart = "Game";
             data = Encoding.ASCII.GetBytes(gameStart);
             newSocket.SendTo(data, data.Length, SocketFlags.None, Remote);
 
             startMessageSent = false;
-        }
+       
 
     }
 
