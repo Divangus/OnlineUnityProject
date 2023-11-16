@@ -21,6 +21,8 @@ public class ServerUDP : MonoBehaviour
     // Reference to the UI button in the Unity editor
     public Button sendMessageButton;
 
+    bool startMessageSent = false;
+
     void Start()
     {
         Debug.Log("Start");
@@ -38,7 +40,13 @@ public class ServerUDP : MonoBehaviour
         listenThread.Start();
 
         // Add a listener to the button click event
-        
+        sendMessageButton.onClick.AddListener(OnSendMessageButtonClick);
+    }
+
+    private void OnSendMessageButtonClick()
+    {
+        // Set the flag to indicate that the start message should be sent
+        startMessageSent = true;
     }
 
     private string GetLocalIPAddress()
@@ -80,6 +88,15 @@ public class ServerUDP : MonoBehaviour
         string startMessage = "Start";
         data = Encoding.ASCII.GetBytes(startMessage);
         newSocket.SendTo(data, data.Length, SocketFlags.None, Remote);
+
+        if (startMessageSent)
+        {
+            string gameStart = "Game";
+            data = Encoding.ASCII.GetBytes(gameStart);
+            newSocket.SendTo(data, data.Length, SocketFlags.None, Remote);
+
+            startMessageSent = false;
+        }
 
     }
 
