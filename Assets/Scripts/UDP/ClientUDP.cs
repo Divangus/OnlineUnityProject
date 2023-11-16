@@ -20,8 +20,10 @@ public class ClientUDP : MonoBehaviour
 
     public TMP_InputField ipAddressText;
     public TextMeshProUGUI connectionStatusText;
-    public GameObject spherePrefab; // Reference to the prefab of the sphere
-    private GameObject instantiatedSphere;
+    public GameObject player1;
+    public GameObject player2;
+    private GameObject instantiatedPlayer1;
+    private GameObject instantiatedPlayer2;
 
 
     private string input;
@@ -48,7 +50,7 @@ public class ClientUDP : MonoBehaviour
 
         newSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
-        yield return null; // Wait for a frame to ensure socket creation is done
+        yield return null;
 
         StartCoroutine(ReceiveData());
     }
@@ -77,11 +79,16 @@ public class ClientUDP : MonoBehaviour
             string startMessage = Encoding.ASCII.GetString(data, 0, recv);
             Debug.Log("Start message from server: " + startMessage);
 
+            recv = newSocket.ReceiveFrom(data, ref Remote);
+            string gameMessage = Encoding.ASCII.GetString(data, 0, recv);
+            Debug.Log("Start message from server: " + gameMessage);
+
             if (startMessage == "Start")
             {
-                instantiatedSphere = Instantiate(spherePrefab, new Vector3(0, 1, 0), Quaternion.identity);
+                instantiatedPlayer1 = Instantiate(player1, new Vector3(-10, 0, 11), Quaternion.identity);
+                instantiatedPlayer2 = Instantiate(player2, new Vector3(10, 0, 11), Quaternion.identity);
             }
-            if (startMessage == "Game")
+            if (gameMessage == "Game")
             {
                 SceneManager.LoadScene("MainScene");
             }

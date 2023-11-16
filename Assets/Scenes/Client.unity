@@ -682,6 +682,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player 2
       objectReference: {fileID: 0}
+    - target: {fileID: 4810912518991602691, guid: 19954de30401f73428254541a9ad156e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4810912518991602692, guid: 19954de30401f73428254541a9ad156e,
         type: 3}
       propertyPath: m_RootOrder
@@ -1010,6 +1015,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Player 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4810912518991602691, guid: 19954de30401f73428254541a9ad156e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4810912518991602692, guid: 19954de30401f73428254541a9ad156e,
         type: 3}
@@ -2332,7 +2342,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ipAddressText: {fileID: 1979010709}
   connectionStatusText: {fileID: 790473262}
-  spherePrefab: {fileID: 669433766}
+  player1: {fileID: 669433766}
+  player2: {fileID: 545042911}
 --- !u!4 &1677572939
 Transform:
   m_ObjectHideFlags: 0
