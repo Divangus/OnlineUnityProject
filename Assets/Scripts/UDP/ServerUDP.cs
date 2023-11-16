@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using TMPro;
 using UnityEngine;
+using UnityEngine.tvOS;
 using UnityEngine.UI;
 
 public class ServerUDP : MonoBehaviour
@@ -14,6 +15,7 @@ public class ServerUDP : MonoBehaviour
     byte[] data = new byte[1024];
     int recv;
     Thread listenThread;
+    private EndPoint Remote;
 
     public TMP_Text ipAddressText;
 
@@ -37,7 +39,7 @@ public class ServerUDP : MonoBehaviour
         listenThread.Start();
 
         // Add a listener to the button click event
-        sendMessageButton.onClick.AddListener(SendMessageToClient);
+        
     }
 
     private string GetLocalIPAddress()
@@ -79,21 +81,17 @@ public class ServerUDP : MonoBehaviour
         string startMessage = "Start";
         data = Encoding.ASCII.GetBytes(startMessage);
         newSocket.SendTo(data, data.Length, SocketFlags.None, Remote);
+
+        sendMessageButton.onClick.AddListener(SendMessageToClient);
     }
 
     private void SendMessageToClient()
     {
         try
         {
-            // Message to be sent
-            string message = "Game";
-
-            // Convert the message to bytes
-            byte[] messageData = Encoding.ASCII.GetBytes(message);
-
-            // Broadcast the message to all connected clients
-            EndPoint clientEndPoint = new IPEndPoint(IPAddress.Broadcast, port);
-            newSocket.SendTo(messageData, messageData.Length, SocketFlags.None, clientEndPoint);
+            string message = "Start";
+            data = Encoding.ASCII.GetBytes(message);
+            newSocket.SendTo(data, data.Length, SocketFlags.None, Remote);
 
             Debug.Log("Message sent to all connected clients: " + message);
         }
