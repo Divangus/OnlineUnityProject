@@ -17,6 +17,8 @@ public class ClientUDP : MonoBehaviour
     string stringData;
     IPEndPoint ipep;
     Thread listenThread;
+    IPEndPoint sender ;
+    EndPoint Remote;
 
     public TMP_InputField ipAddressText;
     public TextMeshProUGUI connectionStatusText;
@@ -63,8 +65,8 @@ public class ClientUDP : MonoBehaviour
             data = Encoding.ASCII.GetBytes(welcome);
             newSocket.SendTo(data, data.Length, SocketFlags.None, ipep);
 
-            IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
-            EndPoint Remote = (EndPoint)sender;
+            sender = new IPEndPoint(IPAddress.Any, 0);
+            Remote = (EndPoint)sender;
 
             data = new byte[1024];
             recv = newSocket.ReceiveFrom(data, ref Remote);
