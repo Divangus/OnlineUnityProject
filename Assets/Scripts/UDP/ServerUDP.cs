@@ -19,6 +19,10 @@ public class ServerUDP : MonoBehaviour
 
     public Button sendMessageButton;
 
+    IPEndPoint ipep;
+    IPEndPoint sender;
+    EndPoint Remote;
+
     void Start()
     {
         Debug.Log("Start");
@@ -27,7 +31,7 @@ public class ServerUDP : MonoBehaviour
         ipAddressText.text = "Local IP: " + localIP;
         Debug.Log("Local IP Address: " + localIP);
 
-        IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(localIP), port);
+        ipep = new IPEndPoint(IPAddress.Parse(localIP), port);
 
         newSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
         newSocket.Bind(ipep);
@@ -65,8 +69,8 @@ public class ServerUDP : MonoBehaviour
     private void ReceiveData()
     {
         Debug.Log("Receive");
-        IPEndPoint sender = new IPEndPoint(IPAddress.Any, port);
-        EndPoint Remote = (EndPoint)(sender);
+        sender = new IPEndPoint(IPAddress.Any, port);
+        Remote = (EndPoint)(sender);
         recv = newSocket.ReceiveFrom(data, ref Remote);
 
         string welcome = "Welcome to my test server";
