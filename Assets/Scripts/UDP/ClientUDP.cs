@@ -38,23 +38,22 @@ public class ClientUDP : MonoBehaviour
         {
             input = ipAddressText.text;
             Debug.Log("Input: " + input);
-            Join();
+            StartCoroutine(Join());
         }
     }
 
-    private void Join()
+    private IEnumerator Join()
     {
-        Debug.Log("Start");
-
         ipep = new IPEndPoint(IPAddress.Parse(input), 9050);
 
         newSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
-        listenThread = new Thread(ReceiveData);
-        listenThread.Start();
+        yield return null; // Wait for a frame to ensure socket creation is done
+
+        StartCoroutine(ReceiveData());
     }
 
-    private void ReceiveData()
+    private IEnumerator ReceiveData()
     {
         try
         {
@@ -80,15 +79,14 @@ public class ClientUDP : MonoBehaviour
 
             if (startMessage == "Start")
             {
-                //SceneManager.LoadScene("MainScene");
                 instantiatedSphere = Instantiate(spherePrefab, new Vector3(0, 1, 0), Quaternion.identity);
             }
-
         }
         catch (Exception e)
         {
             Debug.Log(e.Message);
         }
+        yield return null;
     }
 
     void OnApplicationQuit()
