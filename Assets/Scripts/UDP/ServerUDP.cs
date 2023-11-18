@@ -48,6 +48,8 @@ public class ServerUDP : MonoBehaviour
     {
         if (playGameThreadRunning)
         {
+            SaveData savedData = FindObjectOfType<SaveData>();
+            savedData.player1 = true;
             playGame.Start();
             playGameThreadRunning = false;
         }

@@ -58,6 +58,10 @@ public class ClientUDP : MonoBehaviour
 
         if (startGame)
         {
+            SaveData savedData = FindObjectOfType<SaveData>();
+            savedData.socket = newSocket;
+            savedData.Remote = Remote;
+            savedData.player2 = true;
             SceneManager.LoadScene("MainScene");
             startGame = false;
         }
