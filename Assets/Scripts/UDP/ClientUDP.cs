@@ -12,8 +12,6 @@ using UnityEngine.SceneManagement;
 public class ClientUDP : MonoBehaviour
 {
     Socket newSocket;
-    byte[] data = new byte[1024];
-    int recv;
     string stringData;
     IPEndPoint ipep;
     Thread listenThread;
@@ -29,10 +27,17 @@ public class ClientUDP : MonoBehaviour
 
     private string input;
 
+    bool connected;
+    bool startGame;
+    bool showPlayers;
+
     // Start is called before the first frame update
     void Start()
     {
+        connected = false;
+        showPlayers = false;
         connectionStatusText.text = "Not Connected";
+        listenThread = new Thread(NetworkThread);
     }
 
     void Update()
@@ -41,66 +46,108 @@ public class ClientUDP : MonoBehaviour
         {
             input = ipAddressText.text;
             Debug.Log("Input: " + input);
-            StartCoroutine(Join());
+            Join();
+        }
+
+        if (connected)
+        {
+            // Update UI on the main thread
+            connectionStatusText.text = "Connected";
+            connected = false;
+        }
+
+        if (startGame)
+        {
+            SceneManager.LoadScene("MainScene");
+            startGame = false;
+        }
+
+        if (showPlayers)
+        {
+            instantiatedPlayer1 = Instantiate(player1, new Vector3(-10, 0, 11), Quaternion.identity);
+            instantiatedPlayer2 = Instantiate(player2, new Vector3(10, 0, 11), Quaternion.identity);
+            showPlayers = false;
         }
     }
 
-    private IEnumerator Join()
+    private void Join()
     {
         ipep = new IPEndPoint(IPAddress.Parse(input), 9050);
 
         newSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
-        yield return StartCoroutine(NetworkCoroutine());
-
-        // Start a thread for network operations
+        listenThread.Start();
     }
 
-    private IEnumerator NetworkCoroutine()
+    //THREAD
+    private void NetworkThread()
     {
+        byte[] data = Encoding.ASCII.GetBytes("Hello, are you there?");
+        newSocket.SendTo(data, data.Length, SocketFlags.None, ipep);
+
+        sender = new IPEndPoint(IPAddress.Any, 0);
+        Remote = (EndPoint)sender;
+
+
         try
         {
-            string welcome = "Hello, are you there?";
-            data = Encoding.ASCII.GetBytes(welcome);
-            newSocket.SendTo(data, data.Length, SocketFlags.None, ipep);
-
-            sender = new IPEndPoint(IPAddress.Any, 0);
-            Remote = (EndPoint)sender;
-
             data = new byte[1024];
-            recv = newSocket.ReceiveFrom(data, ref Remote);
+            int recv = newSocket.ReceiveFrom(data, ref Remote);
 
             Debug.Log("Message received from:" + Remote.ToString());
             Debug.Log(Encoding.ASCII.GetString(data, 0, recv));
 
-            // Update UI on the main thread
-            connectionStatusText.text = "Connected";
-
-            recv = newSocket.ReceiveFrom(data, ref Remote);
-            string startMessage = Encoding.ASCII.GetString(data, 0, recv);
-            Debug.Log("Start message from server: " + startMessage);
-
-            if (startMessage == "Start")
-            {
-                instantiatedPlayer1 = Instantiate(player1, new Vector3(-10, 0, 11), Quaternion.identity);
-                instantiatedPlayer2 = Instantiate(player2, new Vector3(10, 0, 11), Quaternion.identity);
-            }
-
-            recv = newSocket.ReceiveFrom(data, ref Remote);
-            string gameMessage = Encoding.ASCII.GetString(data, 0, recv);
-            Debug.Log("Start message from server: " + gameMessage);
-
-            // Update UI and instantiate players on the main thread
-            if (gameMessage == "Game")
-            {
-                SceneManager.LoadScene("MainScene");
-            }
+            connected = true;
         }
-        catch (Exception e)
+        catch
         {
-            Debug.Log(e.Message);
+            Debug.Log("(1) Client stopped waiting.");
+            return;
         }
-        yield return null;
+
+        string startMessage = "";
+        try
+        {
+            data = new byte[1024];
+            int recv = newSocket.ReceiveFrom(data, ref Remote);
+            startMessage = Encoding.ASCII.GetString(data, 0, recv);
+            Debug.Log("Start message from server: " + startMessage);
+        }
+        catch
+        {
+            Debug.Log("(2) Client stopped waiting.");
+            return;
+        }
+
+        if (startMessage == "Start")
+        {
+            showPlayers = true;
+        }
+        else
+        {
+            return;
+        }
+
+        //Wait for server to start the game
+        string gameMessage = "";
+        try
+        {
+            data = new byte[1024];
+            int recv = newSocket.ReceiveFrom(data, ref Remote);
+            gameMessage = Encoding.ASCII.GetString(data, 0, recv);
+            Debug.Log("Start message from server: " + gameMessage);
+        }
+        catch
+        {
+            Debug.Log("(3) Client stopped waiting.");
+            return;
+        }
+
+        // Update UI and instantiate players on the main thread
+        if (gameMessage == "Game")
+        {
+            startGame = true;
+        }
     }
 
     void OnApplicationQuit()
