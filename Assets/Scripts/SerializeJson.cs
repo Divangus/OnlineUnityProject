@@ -15,24 +15,42 @@ public class PlayerData
 
 public class SerializeJson : MonoBehaviour
 {
-    public GameObject PlayerDefault;
+    GameObject PlayerDefault;
+    string json;
 
-    public void ExampleUsage()
+    public void SavePlayer()
     {
+        string name;
+        if (gameObject.GetComponent<SaveData>().player1 == true)
+        {
+            PlayerDefault = GameObject.FindGameObjectWithTag("Player1");
+            name = "HostPlayer";
+        }
+        else
+        {
+            PlayerDefault = GameObject.FindGameObjectWithTag("Player2");
+            name = "ClientPlayer";
+        }
+
         PlayerData playerData = new PlayerData
         {
-            PlayerName = "TestPlayer",
+            PlayerName = name,
             PlayerPos = PlayerDefault.transform.position
         };
 
-        string json = JsonUtility.ToJson(playerData);
+        json = JsonUtility.ToJson(playerData);
         Debug.Log(json);  // Output: {"playerName":"TestPlayer","score":5000}
 
+       
+    }    
+
+    void LoadPlayer()
+    {
         // Decerialize JSON back to player date
         PlayerData deserializedPlayer = JsonUtility.FromJson<PlayerData>(json);
         Debug.Log(deserializedPlayer.PlayerName);  // Output: TestPlayer
         Debug.Log(deserializedPlayer.PlayerPos);  // Output: Pos
-    }    
+    }
 }
 
 //public GameObject Player;
