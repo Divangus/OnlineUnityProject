@@ -6,50 +6,95 @@ using UnityEngine.Networking;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Threading;
+using System.Net.Sockets;
+using System.Net;
+using System.Net.WebSockets;
+using UnityEngine.tvOS;
+using KartGame.KartSystems;
 
 public class PlayerData
 {
     public Vector3 PlayerPos;
-    public string PlayerName;
 }
 
 public class SerializeJson : MonoBehaviour
 {
     GameObject PlayerDefault;
-    string json;
+    GameObject PlayerEnemy;
+    //string json;
+    float time = 1.0f;
+    SaveData saveData;
+    Thread reciveEnemy, sendPlayer;
+    bool playing = true;
 
-    public void SavePlayer()
+    private void Start()
     {
-        string name;
-        if (gameObject.GetComponent<SaveData>().player1 == true)
+        saveData = FindObjectOfType<SaveData>();
+
+        if (saveData.player1 == true)
         {
             PlayerDefault = GameObject.FindGameObjectWithTag("Player1");
-            name = "HostPlayer";
+
+            PlayerEnemy = GameObject.FindGameObjectWithTag("Player2");
         }
         else
         {
             PlayerDefault = GameObject.FindGameObjectWithTag("Player2");
-            name = "ClientPlayer";
+
+            PlayerEnemy = GameObject.FindGameObjectWithTag("Player1");
         }
 
-        PlayerData playerData = new PlayerData
+        PlayerEnemy.GetComponent<ArcadeKart>().enabled = false;
+
+        reciveEnemy = new Thread(LoadPlayer);
+        reciveEnemy.Start();
+
+        sendPlayer = new Thread(SavePlayer);
+        sendPlayer.Start();
+    }
+
+    void SavePlayer()
+    {
+        while(playing)
         {
-            PlayerName = name,
-            PlayerPos = PlayerDefault.transform.position
-        };
+            if(time <= 0.0f)
+            {
+                PlayerData playerData = new PlayerData
+                {
+                    PlayerPos = PlayerDefault.transform.position
+                };
 
-        json = JsonUtility.ToJson(playerData);
-        Debug.Log(json);  // Output: {"playerName":"TestPlayer","score":5000}
+                string json = JsonUtility.ToJson(playerData);
+                byte[] data = Encoding.ASCII.GetBytes(json);
 
-       
-    }    
+                saveData.socket.SendTo(data, data.Length, SocketFlags.None, saveData.Remote);
+
+                time = 1.0f;
+            }
+            else
+            {
+                time -= Time.deltaTime;
+            }
+        }
+
+    }
 
     void LoadPlayer()
     {
-        // Decerialize JSON back to player date
-        PlayerData deserializedPlayer = JsonUtility.FromJson<PlayerData>(json);
-        Debug.Log(deserializedPlayer.PlayerName);  // Output: TestPlayer
-        Debug.Log(deserializedPlayer.PlayerPos);  // Output: Pos
+        while(playing)
+        {
+            byte[] data = new byte[1024];
+
+            int recv = saveData.socket.ReceiveFrom(data, ref saveData.Remote);
+
+            string json = Encoding.ASCII.GetString(data, 0, recv);
+
+            // Decerialize JSON back to player date
+            PlayerData deserializedPlayer = JsonUtility.FromJson<PlayerData>(json);
+            //Debug.Log(deserializedPlayer.PlayerPos);  // Output: Pos
+            PlayerEnemy.transform.position = deserializedPlayer.PlayerPos;
+        }
     }
 }
 
