@@ -21,12 +21,10 @@ public class SerializeJson : MonoBehaviour
 {
     GameObject PlayerDefault;
     GameObject PlayerEnemy;
-    //string json;
-    //float time = 1.0f;
+
     SaveData saveData;
     Thread reciveEnemy, sendPlayer;
     bool playing = true;
-    //bool timer = false;
     PlayerData playerData;
     bool playerTransform = false;
     bool updateEnemy = false;
@@ -42,12 +40,16 @@ public class SerializeJson : MonoBehaviour
             PlayerDefault = GameObject.FindGameObjectWithTag("Player");
 
             PlayerEnemy = GameObject.FindGameObjectWithTag("Player2");
+
+            GameObject.FindGameObjectWithTag("Camera1").SetActive(false);
         }
         else
         {
             PlayerDefault = GameObject.FindGameObjectWithTag("Player2");
 
             PlayerEnemy = GameObject.FindGameObjectWithTag("Player");
+
+            GameObject.FindGameObjectWithTag("Camera2").SetActive(false);
         }
              
 
@@ -63,11 +65,6 @@ public class SerializeJson : MonoBehaviour
 
     private void Update()
     {
-        //if (timer == true)
-        //{
-        //    Timer();
-        //    timer = false;
-        //}
         if (playerTransform)
         {
             playerData.PlayerPos = PlayerDefault.transform.position;
@@ -98,11 +95,6 @@ public class SerializeJson : MonoBehaviour
 
     }
 
-    //private void Timer()
-    //{
-    //    time -= Time.deltaTime;
-    //}
-
     void LoadPlayer()
     {
         while(playing)
@@ -122,32 +114,4 @@ public class SerializeJson : MonoBehaviour
         }
     }   
 }
-
-//    public Vector3 PlayerPos;
-//    public string PlayerName;
-//    //public int hp = 12;
-//    //public List<int> pos = new List<int> { 3, 3, 3 };
-//}
-//void serializeJson()
-//{
-//    var t = new testClass();
-//    t.PlayerName = "caca";
-//    t.PlayerPos = Player.transform.position;
-//    //t.hp = 40;
-//    //t.pos = new List<int> { 10, 3, 12 };
-//    string json = JsonUtility.ToJson(t);
-//    stream = new MemoryStream();
-//    BinaryWriter writer = new BinaryWriter(stream);
-//    writer.Write(json);
-//}
-//void deserializeJson()
-//{
-//    var t = new testClass();
-//    BinaryReader reader = new BinaryReader(stream);
-//    stream.Seek(0, SeekOrigin.Begin);
-//    string json = reader.ReadString();
-//    Debug.Log(json);
-//    t = JsonUtility.FromJson<testClass>(json);
-//    Debug.Log(t.PlayerName.ToString() + " " + t.PlayerPos.ToString());
-//}   
 
