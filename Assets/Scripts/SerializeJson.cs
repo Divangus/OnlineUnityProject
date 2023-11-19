@@ -10,7 +10,6 @@ using System.Threading;
 using System.Net.Sockets;
 using System.Net;
 using System.Net.WebSockets;
-using UnityEngine.tvOS;
 using KartGame.KartSystems;
 
 public class PlayerData
@@ -27,6 +26,7 @@ public class SerializeJson : MonoBehaviour
     SaveData saveData;
     Thread reciveEnemy, sendPlayer;
     bool playing = true;
+    bool timer = false;
 
     private void Start()
     {
@@ -52,6 +52,16 @@ public class SerializeJson : MonoBehaviour
 
         sendPlayer = new Thread(SavePlayer);
         sendPlayer.Start();
+
+    }
+
+    private void Update()
+    {
+        if (timer == true)
+        {
+            Timer();
+            timer = false;
+        }
     }
 
     void SavePlayer()
@@ -74,10 +84,15 @@ public class SerializeJson : MonoBehaviour
             }
             else
             {
-                time -= Time.deltaTime;
+                timer = true;
             }
         }
 
+    }
+
+    private void Timer()
+    {
+        time -= Time.deltaTime;
     }
 
     void LoadPlayer()
@@ -98,55 +113,31 @@ public class SerializeJson : MonoBehaviour
     }
 }
 
-//public GameObject Player;
+//    public Vector3 PlayerPos;
+//    public string PlayerName;
+//    //public int hp = 12;
+//    //public List<int> pos = new List<int> { 3, 3, 3 };
+//}
+//void serializeJson()
+//{
+//    var t = new testClass();
+//    t.PlayerName = "caca";
+//    t.PlayerPos = Player.transform.position;
+//    //t.hp = 40;
+//    //t.pos = new List<int> { 10, 3, 12 };
+//    string json = JsonUtility.ToJson(t);
+//    stream = new MemoryStream();
+//    BinaryWriter writer = new BinaryWriter(stream);
+//    writer.Write(json);
+//}
+//void deserializeJson()
+//{
+//    var t = new testClass();
+//    BinaryReader reader = new BinaryReader(stream);
+//    stream.Seek(0, SeekOrigin.Begin);
+//    string json = reader.ReadString();
+//    Debug.Log(json);
+//    t = JsonUtility.FromJson<testClass>(json);
+//    Debug.Log(t.PlayerName.ToString() + " " + t.PlayerPos.ToString());
+//}   
 
-    //static MemoryStream stream;
-    //bool a = true;
-    //// Start is called before the first frame update
-    //void Start()
-    //{
-
-    //}
-
-    //// Update is called once per frame
-    //void Update()
-    //{
-    //    if (a)
-    //    {
-    //        serializeJson();
-    //        deserializeJson();
-    //        a = false;
-    //    }
-    //}
-
-    //public class testClass
-    //{
-    //    public Vector3 PlayerPos;
-    //    public string PlayerName;
-    //    //public int hp = 12;
-    //    //public List<int> pos = new List<int> { 3, 3, 3 };
-    //}
-
-    //void serializeJson()
-    //{
-    //    var t = new testClass();
-    //    t.PlayerName = "caca";
-    //    t.PlayerPos = Player.transform.position;
-    //    //t.hp = 40;
-    //    //t.pos = new List<int> { 10, 3, 12 };
-    //    string json = JsonUtility.ToJson(t);
-    //    stream = new MemoryStream();
-    //    BinaryWriter writer = new BinaryWriter(stream);
-    //    writer.Write(json);
-    //}
-    //void deserializeJson()
-    //{
-    //    var t = new testClass();
-    //    BinaryReader reader = new BinaryReader(stream);
-    //    stream.Seek(0, SeekOrigin.Begin);
-
-    //    string json = reader.ReadString();
-    //    Debug.Log(json);
-    //    t = JsonUtility.FromJson<testClass>(json);
-    //    Debug.Log(t.PlayerName.ToString() + " " + t.PlayerPos.ToString());
-    //}   
