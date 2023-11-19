@@ -49,6 +49,8 @@ public class ServerUDP : MonoBehaviour
         if (playGameThreadRunning)
         {
             SaveData savedData = FindObjectOfType<SaveData>();
+            savedData.socket = newSocket;
+            savedData.Remote = Remote;
             savedData.player1 = true;
             playGame.Start();
             playGameThreadRunning = false;

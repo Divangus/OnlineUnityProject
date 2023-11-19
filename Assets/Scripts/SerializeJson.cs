@@ -27,14 +27,19 @@ public class SerializeJson : MonoBehaviour
     Thread reciveEnemy, sendPlayer;
     bool playing = true;
     bool timer = false;
+    PlayerData playerData;
+    bool playerTransform = false;
+    bool updateEnemy = false;
+    PlayerData deserializedPlayer;
 
     private void Start()
     {
         saveData = FindObjectOfType<SaveData>();
+        playerData = new PlayerData();
 
         if (saveData.player1 == true)
         {
-            PlayerDefault = GameObject.FindGameObjectWithTag("Player1");
+            PlayerDefault = GameObject.FindGameObjectWithTag("Player");
 
             PlayerEnemy = GameObject.FindGameObjectWithTag("Player2");
         }
@@ -42,10 +47,11 @@ public class SerializeJson : MonoBehaviour
         {
             PlayerDefault = GameObject.FindGameObjectWithTag("Player2");
 
-            PlayerEnemy = GameObject.FindGameObjectWithTag("Player1");
+            PlayerEnemy = GameObject.FindGameObjectWithTag("Player");
         }
+             
 
-        PlayerEnemy.GetComponent<ArcadeKart>().enabled = false;
+        PlayerEnemy.GetComponent<ArcadeKart>().enabled = false; //client
 
         reciveEnemy = new Thread(LoadPlayer);
         reciveEnemy.Start();
@@ -62,6 +68,16 @@ public class SerializeJson : MonoBehaviour
             Timer();
             timer = false;
         }
+        if (playerTransform)
+        {
+            playerData.PlayerPos = PlayerDefault.transform.position;
+            playerTransform = false;
+        }
+        if (updateEnemy)
+        {
+            PlayerEnemy.transform.position = deserializedPlayer.PlayerPos;
+            updateEnemy = false;
+        }
     }
 
     void SavePlayer()
@@ -70,15 +86,15 @@ public class SerializeJson : MonoBehaviour
         {
             if(time <= 0.0f)
             {
-                PlayerData playerData = new PlayerData
-                {
-                    PlayerPos = PlayerDefault.transform.position
-                };
-
+                playerTransform = true;
+               
                 string json = JsonUtility.ToJson(playerData);
                 byte[] data = Encoding.ASCII.GetBytes(json);
 
+                Debug.Log(saveData.socket);
+                Debug.Log(saveData.Remote);
                 saveData.socket.SendTo(data, data.Length, SocketFlags.None, saveData.Remote);
+                
 
                 time = 1.0f;
             }
@@ -101,16 +117,18 @@ public class SerializeJson : MonoBehaviour
         {
             byte[] data = new byte[1024];
 
-            int recv = saveData.socket.ReceiveFrom(data, ref saveData.Remote);
+            Debug.Log(saveData.socket);
+            Debug.Log(saveData.Remote);
+            int recv = saveData.socket.ReceiveFrom(data, ref saveData.Remote);//server
 
             string json = Encoding.ASCII.GetString(data, 0, recv);
 
             // Decerialize JSON back to player date
-            PlayerData deserializedPlayer = JsonUtility.FromJson<PlayerData>(json);
+            deserializedPlayer = JsonUtility.FromJson<PlayerData>(json);
             //Debug.Log(deserializedPlayer.PlayerPos);  // Output: Pos
-            PlayerEnemy.transform.position = deserializedPlayer.PlayerPos;
+            updateEnemy = true;
         }
-    }
+    }   
 }
 
 //    public Vector3 PlayerPos;
