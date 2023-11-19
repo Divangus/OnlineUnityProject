@@ -22,11 +22,11 @@ public class SerializeJson : MonoBehaviour
     GameObject PlayerDefault;
     GameObject PlayerEnemy;
     //string json;
-    float time = 1.0f;
+    //float time = 1.0f;
     SaveData saveData;
     Thread reciveEnemy, sendPlayer;
     bool playing = true;
-    bool timer = false;
+    //bool timer = false;
     PlayerData playerData;
     bool playerTransform = false;
     bool updateEnemy = false;
@@ -63,11 +63,11 @@ public class SerializeJson : MonoBehaviour
 
     private void Update()
     {
-        if (timer == true)
-        {
-            Timer();
-            timer = false;
-        }
+        //if (timer == true)
+        //{
+        //    Timer();
+        //    timer = false;
+        //}
         if (playerTransform)
         {
             playerData.PlayerPos = PlayerDefault.transform.position;
@@ -84,8 +84,7 @@ public class SerializeJson : MonoBehaviour
     {
         while(playing)
         {
-            if(time <= 0.0f)
-            {
+            
                 playerTransform = true;
                
                 string json = JsonUtility.ToJson(playerData);
@@ -95,21 +94,14 @@ public class SerializeJson : MonoBehaviour
                 Debug.Log(saveData.Remote);
                 saveData.socket.SendTo(data, data.Length, SocketFlags.None, saveData.Remote);
                 
-
-                time = 1.0f;
-            }
-            else
-            {
-                timer = true;
-            }
         }
 
     }
 
-    private void Timer()
-    {
-        time -= Time.deltaTime;
-    }
+    //private void Timer()
+    //{
+    //    time -= Time.deltaTime;
+    //}
 
     void LoadPlayer()
     {
