@@ -48,7 +48,7 @@ public class InGameMenuManager : MonoBehaviour
                 return;
             }
 
-            SetPauseMenuActivation(!menuRoot.activeSelf);
+            //SetPauseMenuActivation(!menuRoot.activeSelf);
 
         }
 
@@ -64,15 +64,15 @@ public class InGameMenuManager : MonoBehaviour
 
     public void ClosePauseMenu()
     {
-        SetPauseMenuActivation(false);
+        //SetPauseMenuActivation(false);
     }
 
 
     public void TogglePauseMenu()
     {
-        SetPauseMenuActivation(!menuRoot.activeSelf);
+        //SetPauseMenuActivation(!menuRoot.activeSelf);
     }
-    void SetPauseMenuActivation(bool active)
+    /*void SetPauseMenuActivation(bool active)
     {
         menuRoot.SetActive(active);
 
@@ -93,7 +93,7 @@ public class InGameMenuManager : MonoBehaviour
             AudioUtility.SetMasterVolume(1);
         }
 
-    }
+    }*/
 
     void OnShadowsChanged(bool newValue)
     {
