@@ -21,8 +21,6 @@ public class SerializeJson : MonoBehaviour
 {
     GameObject PlayerDefault;
     GameObject PlayerEnemy;
-    public GameObject Camera1;
-    public GameObject Camera2;
 
     SaveData saveData;
     Thread reciveEnemy, sendPlayer;
@@ -43,7 +41,7 @@ public class SerializeJson : MonoBehaviour
 
             PlayerEnemy = GameObject.FindGameObjectWithTag("Player2");
 
-            Camera1.SetActive(true);
+            GameObject.FindGameObjectWithTag("Camera1").SetActive(false);
         }
         else
         {
@@ -51,7 +49,7 @@ public class SerializeJson : MonoBehaviour
 
             PlayerEnemy = GameObject.FindGameObjectWithTag("Player");
 
-            Camera2.SetActive(true);
+            GameObject.FindGameObjectWithTag("Camera2").SetActive(false);
         }
              
 
