@@ -89,6 +89,8 @@ public class SerializeJson : MonoBehaviour
                 string json = JsonUtility.ToJson(playerData);
                 byte[] data = Encoding.ASCII.GetBytes(json);
 
+                Debug.Log(saveData.socket);
+                Debug.Log(saveData.Remote);
                 saveData.socket.SendTo(data, data.Length, SocketFlags.None, saveData.Remote);
                 
         }
