@@ -45,8 +45,7 @@ public class SerializeJson : MonoBehaviour
 
             Camera1.SetActive(true);
         }
-
-        if (saveData.player2 == true)
+        else
         {
             PlayerDefault = GameObject.FindGameObjectWithTag("Player2");
 
