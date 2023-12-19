@@ -147,7 +147,7 @@ public class ClientUDP : MonoBehaviour
         {
             data = new byte[1024];
             int recv = newSocket.ReceiveFrom(data, ref Remote);
-            startMessage = Encoding.ASCII.GetString(data, 0, recv);
+            PlayerNum = Encoding.ASCII.GetString(data, 0, recv);
             Debug.Log("Player: " + PlayerNum);
         }
         catch
