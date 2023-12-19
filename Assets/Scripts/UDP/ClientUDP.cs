@@ -30,6 +30,7 @@ public class ClientUDP : MonoBehaviour
     bool connected;
     bool startGame;
     bool showPlayers;
+    bool player = false;
 
     // Start is called before the first frame update
     void Start()
@@ -60,8 +61,17 @@ public class ClientUDP : MonoBehaviour
         {
             SaveData savedData = FindObjectOfType<SaveData>();
             savedData.socket = newSocket;
-            savedData.Remote = Remote;
-            savedData.player2 = true;
+            savedData.ServerRemote = Remote;
+
+            if (player)
+            {
+                savedData.player1 = true;
+            }
+            else
+            {
+                savedData.player2 = true;  
+            }
+
             SceneManager.LoadScene("MainScene");
             startGame = false;
         }
@@ -131,6 +141,27 @@ public class ClientUDP : MonoBehaviour
         {
             return;
         }
+
+        string PlayerNum = "";
+        try
+        {
+            data = new byte[1024];
+            int recv = newSocket.ReceiveFrom(data, ref Remote);
+            startMessage = Encoding.ASCII.GetString(data, 0, recv);
+            Debug.Log("Player: " + PlayerNum);
+        }
+        catch
+        {
+            Debug.Log("(2) Client stopped waiting.");
+            return;
+        }
+
+        if (PlayerNum == "Player 1")
+        {
+            player = true;
+        }
+
+
 
         //Wait for server to start the game
         string gameMessage = "";

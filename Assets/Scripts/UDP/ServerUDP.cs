@@ -15,6 +15,7 @@ public class ServerUDP : MonoBehaviour
     int recv;
     Thread listenThread;
     Thread playGame;
+    int players = 0;
 
     public TMP_Text ipAddressText;
 
@@ -22,7 +23,7 @@ public class ServerUDP : MonoBehaviour
 
     IPEndPoint ipep;
     IPEndPoint sender;
-    EndPoint Remote;
+    EndPoint[] Remote = new EndPoint[1];
 
     private bool playGameThreadRunning = false;
 
@@ -51,7 +52,7 @@ public class ServerUDP : MonoBehaviour
             SaveData savedData = FindObjectOfType<SaveData>();
             savedData.socket = newSocket;
             savedData.Remote = Remote;
-            savedData.player1 = true;
+            savedData.client = true;
             playGame.Start();
             playGameThreadRunning = false;
         }
@@ -59,10 +60,14 @@ public class ServerUDP : MonoBehaviour
 
     void playCounter()
     {
-        Debug.Log("aqui");
-        string startMessage = "Game";
-        data = Encoding.ASCII.GetBytes(startMessage);
-        newSocket.SendTo(data, data.Length, SocketFlags.None, Remote);
+        for(int i = 0; i < Remote.Length; i++)
+        {
+            Debug.Log("aqui");
+            string startMessage = "Game";
+            data = Encoding.ASCII.GetBytes(startMessage);
+            newSocket.SendTo(data, data.Length, SocketFlags.None, Remote[i]);
+        }
+        
     }
     private string GetLocalIPAddress()
     {
@@ -91,19 +96,27 @@ public class ServerUDP : MonoBehaviour
 
     private void ReceiveData()
     {
-        Debug.Log("Receive");
-        sender = new IPEndPoint(IPAddress.Any, port);
-        Remote = (EndPoint)(sender);
-        recv = newSocket.ReceiveFrom(data, ref Remote);
+        while(!playGameThreadRunning)
+        {
+            Debug.Log("Receive");
+            sender = new IPEndPoint(IPAddress.Any, players);
+            Remote[players] = (EndPoint)(sender);
+            recv = newSocket.ReceiveFrom(data, ref Remote[players]);
 
-        string welcome = "Welcome to my test server";
-        data = Encoding.ASCII.GetBytes(welcome);
-        newSocket.SendTo(data, data.Length, SocketFlags.None, Remote);
+            string welcome = "Welcome to my test server";
+            data = Encoding.ASCII.GetBytes(welcome);
+            newSocket.SendTo(data, data.Length, SocketFlags.None, Remote[players]);
 
-        string startMessage = "Start";
-        data = Encoding.ASCII.GetBytes(startMessage);
-        newSocket.SendTo(data, data.Length, SocketFlags.None, Remote);
+            string startMessage = "Start";
+            data = Encoding.ASCII.GetBytes(startMessage);
+            newSocket.SendTo(data, data.Length, SocketFlags.None, Remote[players]);
 
+            string PlayerNum = "Player " + (players + 1).ToString();
+            data = Encoding.ASCII.GetBytes(PlayerNum);
+            newSocket.SendTo(data, data.Length, SocketFlags.None, Remote[players]);
+
+            players++;
+        }        
 
     }
 
