@@ -23,7 +23,7 @@ public class ServerUDP : MonoBehaviour
 
     IPEndPoint ipep;
     IPEndPoint sender;
-    EndPoint[] Remote = new EndPoint[1];
+    EndPoint[] Remote = new EndPoint[2];
 
     private bool playGameThreadRunning = false;
 
@@ -111,7 +111,15 @@ public class ServerUDP : MonoBehaviour
             data = Encoding.ASCII.GetBytes(startMessage);
             newSocket.SendTo(data, data.Length, SocketFlags.None, Remote[players]);
 
-            string PlayerNum = "Player " + (players + 1).ToString();
+            string PlayerNum = "No";
+            if (players == 0)
+            {
+                PlayerNum = "Player 1";
+            }
+            if (players == 1)
+            {
+                PlayerNum = "Player 2";
+            }
             data = Encoding.ASCII.GetBytes(PlayerNum);
             newSocket.SendTo(data, data.Length, SocketFlags.None, Remote[players]);
 
