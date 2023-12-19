@@ -9,7 +9,7 @@ public class SaveData : MonoBehaviour
     public EndPoint ServerRemote;
     public bool player2 = false;
     public bool player1 = false;
-    public bool client = false;
+    public bool server = false;
     void Start()
     {
         DontDestroyOnLoad(gameObject);

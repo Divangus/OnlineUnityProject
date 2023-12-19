@@ -11,8 +11,7 @@ public class ServerUDP : MonoBehaviour
 {
     Socket newSocket;
     int port = 9050;
-    byte[] data = new byte[1024];
-    int recv;
+    
     Thread listenThread;
     Thread playGame;
     int players = 0;
@@ -21,8 +20,6 @@ public class ServerUDP : MonoBehaviour
 
     public Button sendMessageButton;
 
-    IPEndPoint ipep;
-    IPEndPoint sender;
     EndPoint[] Remote = new EndPoint[2];
 
     private bool playGameThreadRunning = false;
@@ -35,7 +32,7 @@ public class ServerUDP : MonoBehaviour
         ipAddressText.text = "Local IP: " + localIP;
         Debug.Log("Local IP Address: " + localIP);
 
-        ipep = new IPEndPoint(IPAddress.Parse(localIP), port);
+        IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(localIP), port);
 
         newSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
         newSocket.Bind(ipep);
@@ -52,7 +49,7 @@ public class ServerUDP : MonoBehaviour
             SaveData savedData = FindObjectOfType<SaveData>();
             savedData.socket = newSocket;
             savedData.Remote = Remote;
-            savedData.client = true;
+            savedData.server = true;
             playGame.Start();
             playGameThreadRunning = false;
         }
@@ -62,6 +59,7 @@ public class ServerUDP : MonoBehaviour
     {
         for(int i = 0; i < Remote.Length; i++)
         {
+            byte[] data = new byte[1024];
             Debug.Log("aqui");
             string startMessage = "Game";
             data = Encoding.ASCII.GetBytes(startMessage);
@@ -96,12 +94,25 @@ public class ServerUDP : MonoBehaviour
 
     private void ReceiveData()
     {
-        while(!playGameThreadRunning)
+        while (!playGameThreadRunning)
         {
-            Debug.Log("Receive");
-            sender = new IPEndPoint(IPAddress.Any, players);
+            byte[] data = new byte[1024];
+            int recv = 0;
+            //Debug.Log("Receive");
+            IPEndPoint sender = new IPEndPoint(IPAddress.Any, players);
             Remote[players] = (EndPoint)(sender);
-            recv = newSocket.ReceiveFrom(data, ref Remote[players]);
+
+            try
+            {
+                recv = newSocket.ReceiveFrom(data, ref Remote[players]);
+                Debug.Log("Receive Player" + (players + 1).ToString());
+            }
+            catch
+            {
+                Debug.Log("Stop waiting for clients!");
+                //Debug.Log(Encoding.ASCII.GetString(data, 0, recv));
+                return;
+            }
 
             string welcome = "Welcome to my test server";
             data = Encoding.ASCII.GetBytes(welcome);
@@ -111,20 +122,16 @@ public class ServerUDP : MonoBehaviour
             data = Encoding.ASCII.GetBytes(startMessage);
             newSocket.SendTo(data, data.Length, SocketFlags.None, Remote[players]);
 
-            string PlayerNum = "No";
-            if (players == 0)
-            {
-                PlayerNum = "Player 1";
-            }
-            if (players == 1)
-            {
-                PlayerNum = "Player 2";
-            }
-            Debug.Log(PlayerNum);
+            string PlayerNum = "Player " + (players + 1).ToString();
             data = Encoding.ASCII.GetBytes(PlayerNum);
             newSocket.SendTo(data, data.Length, SocketFlags.None, Remote[players]);
 
             players++;
+
+            if(players == 2)
+            {
+                listenThread.Abort();
+            }
         }        
 
     }
@@ -137,14 +144,7 @@ public class ServerUDP : MonoBehaviour
 
     void OnApplicationQuit()
     {
-        try
-        {
-            newSocket.Close();
-            listenThread.Abort();
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogError(e.Message);
-        }
+         newSocket.Close();
+         listenThread.Abort();        
     }
 }
