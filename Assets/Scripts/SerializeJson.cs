@@ -87,8 +87,8 @@ public class SerializeJson : MonoBehaviour
                 string json = JsonUtility.ToJson(playerData);
                 byte[] data = Encoding.ASCII.GetBytes(json);
 
-                Debug.Log(saveData.socket);
-                Debug.Log(saveData.Remote);
+                //Debug.Log(saveData.socket);
+                //Debug.Log(saveData.Remote);
                 saveData.socket.SendTo(data, data.Length, SocketFlags.None, saveData.Remote);
                 
         }
@@ -101,8 +101,8 @@ public class SerializeJson : MonoBehaviour
         {
             byte[] data = new byte[1024];
 
-            Debug.Log(saveData.socket);
-            Debug.Log(saveData.Remote);
+            //Debug.Log(saveData.socket);
+            //Debug.Log(saveData.Remote);
             int recv = saveData.socket.ReceiveFrom(data, ref saveData.Remote);//server
 
             string json = Encoding.ASCII.GetString(data, 0, recv);
