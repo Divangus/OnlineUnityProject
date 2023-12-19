@@ -120,7 +120,7 @@ public class ServerUDP : MonoBehaviour
             {
                 PlayerNum = "Player 2";
             }
-            Debug.Log("PlayerNum");
+            Debug.Log(PlayerNum);
             data = Encoding.ASCII.GetBytes(PlayerNum);
             newSocket.SendTo(data, data.Length, SocketFlags.None, Remote[players]);
 
