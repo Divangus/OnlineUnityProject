@@ -54,21 +54,21 @@ public class SerializeJson : MonoBehaviour
             GameObject.FindGameObjectWithTag("Camera2").SetActive(false);
         }
             
-        //if(saveData.server)
-        //{
-        //    PlayerDefault.GetComponent<ArcadeKart>().enabled = false;
-        //    PlayerEnemy.GetComponent<ArcadeKart>().enabled = false;
-        //}
-        //else
-        //{
+        if(saveData.server)
+        {
+            PlayerDefault.GetComponent<ArcadeKart>().enabled = false;
+            PlayerEnemy.GetComponent<ArcadeKart>().enabled = false;
+        }
+        else
+        {
             PlayerEnemy.GetComponent<ArcadeKart>().enabled = false; //client
+        }
 
-            reciveEnemy = new Thread(LoadPlayer);
-            reciveEnemy.Start();
+        reciveEnemy = new Thread(LoadPlayer);
+        reciveEnemy.Start();
 
-            sendPlayer = new Thread(SavePlayer);
-            sendPlayer.Start();
-        //}        
+        sendPlayer = new Thread(SavePlayer);
+        sendPlayer.Start();
 
     }
 
