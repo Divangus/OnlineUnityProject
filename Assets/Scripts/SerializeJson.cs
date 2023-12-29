@@ -28,6 +28,7 @@ public class SerializeJson : MonoBehaviour
     PlayerData playerData;
     bool playerTransform = false;
     bool updateEnemy = false;
+    bool sendP1 = false, sendP2 = false;
     PlayerData deserializedPlayer;
     PlayerData player1;
     PlayerData player2;
@@ -94,20 +95,28 @@ public class SerializeJson : MonoBehaviour
             if(saveData.server)
             {
                 //playerTransform = true;
+                if (sendP1)
+                {
+                    string json = JsonUtility.ToJson(player1);
+                    byte[] data = Encoding.ASCII.GetBytes(json);
 
-                string json = JsonUtility.ToJson(player1);
-                byte[] data = Encoding.ASCII.GetBytes(json);
+                    //Debug.Log(saveData.socket);
+                    //Debug.Log(saveData.Remote);
+                    saveData.socket.SendTo(data, data.Length, SocketFlags.None, saveData.Remote[0]);
+                    sendP1 = false;
+                }
+               
+                if(sendP2)
+                {
+                    string json_ = JsonUtility.ToJson(player2);
+                    byte[] data_ = Encoding.ASCII.GetBytes(json_);
 
-                //Debug.Log(saveData.socket);
-                //Debug.Log(saveData.Remote);
-                saveData.socket.SendTo(data, data.Length, SocketFlags.None, saveData.Remote[1]);
-
-                string json_ = JsonUtility.ToJson(player2);
-                byte[] data_ = Encoding.ASCII.GetBytes(json_);
-
-                //Debug.Log(saveData.socket);
-                //Debug.Log(saveData.Remote);
-                saveData.socket.SendTo(data_, data_.Length, SocketFlags.None, saveData.Remote[0]);
+                    //Debug.Log(saveData.socket);
+                    //Debug.Log(saveData.Remote);
+                    saveData.socket.SendTo(data_, data_.Length, SocketFlags.None, saveData.Remote[1]);
+                    sendP2 = false;
+                }
+                
             }
             else
             {
@@ -144,6 +153,8 @@ public class SerializeJson : MonoBehaviour
                 player1 = JsonUtility.FromJson<PlayerData>(json);
                 //Debug.Log(deserializedPlayer.PlayerPos);  // Output: Pos
 
+                sendP1 = true;
+
                 byte[] data_ = new byte[1024];
 
                 //Debug.Log(saveData.socket);
@@ -155,6 +166,8 @@ public class SerializeJson : MonoBehaviour
                 // Decerialize JSON back to player date
                 player2 = JsonUtility.FromJson<PlayerData>(json_);
                 //Debug.Log(deserializedPlayer.PlayerPos);  // Output: Pos
+
+                sendP2 = true;
             }
             else
             {
