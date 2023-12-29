@@ -56,12 +56,12 @@ public class SerializeJson : MonoBehaviour
             
         if(saveData.server)
         {
-            PlayerDefault.GetComponent<ArcadeKart>().enabled = false;
-            PlayerEnemy.GetComponent<ArcadeKart>().enabled = false;
+            Destroy(PlayerDefault.GetComponent<KeyboardInput>());
+            Destroy(PlayerEnemy.GetComponent<KeyboardInput>());
         }
         else
         {
-            PlayerEnemy.GetComponent<ArcadeKart>().enabled = false; //client
+            Destroy(PlayerEnemy.GetComponent<KeyboardInput>()); //client
         }
 
         reciveEnemy = new Thread(LoadPlayer);
