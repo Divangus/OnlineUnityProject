@@ -15,6 +15,7 @@ using KartGame.KartSystems;
 public class PlayerData
 {
     public Vector3 PlayerPos;
+    public Quaternion PlayerRot;
     public int playerNum;
 }
 
@@ -86,11 +87,13 @@ public class SerializeJson : MonoBehaviour
         if (playerTransform)
         {
             playerData.PlayerPos = PlayerDefault.transform.position;
+            playerData.PlayerRot = PlayerDefault.transform.rotation;
             playerTransform = false;
         }
         if (updateEnemy)
         {
             PlayerEnemy.transform.position = deserializedPlayer.PlayerPos;
+            PlayerEnemy.transform.rotation = deserializedPlayer.PlayerRot;
             updateEnemy = false;
         }
     }
