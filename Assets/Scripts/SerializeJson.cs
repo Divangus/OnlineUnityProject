@@ -15,6 +15,7 @@ using KartGame.KartSystems;
 public class PlayerData
 {
     public Vector3 PlayerPos;
+    public int playerNum;
 }
 
 public class SerializeJson : MonoBehaviour
@@ -28,10 +29,11 @@ public class SerializeJson : MonoBehaviour
     PlayerData playerData;
     bool playerTransform = false;
     bool updateEnemy = false;
-    bool sendP1 = false, sendP2 = false;
     PlayerData deserializedPlayer;
     PlayerData player1;
     PlayerData player2;
+
+    EndPoint remote;
 
     private void Start()
     {
@@ -44,6 +46,8 @@ public class SerializeJson : MonoBehaviour
 
             PlayerEnemy = GameObject.FindGameObjectWithTag("Player2");
 
+            playerData.playerNum = 1;
+
             GameObject.FindGameObjectWithTag("Camera1").SetActive(false);
         }
         else
@@ -51,6 +55,8 @@ public class SerializeJson : MonoBehaviour
             PlayerDefault = GameObject.FindGameObjectWithTag("Player2");
 
             PlayerEnemy = GameObject.FindGameObjectWithTag("Player");
+
+            playerData.playerNum = 2;
 
             GameObject.FindGameObjectWithTag("Camera2").SetActive(false);
         }
@@ -64,6 +70,8 @@ public class SerializeJson : MonoBehaviour
         {
             Destroy(PlayerEnemy.GetComponent<KeyboardInput>()); //client
         }
+
+        remote = (EndPoint)new IPEndPoint(IPAddress.Any, 0);
 
         reciveEnemy = new Thread(LoadPlayer);
         reciveEnemy.Start();
@@ -95,27 +103,19 @@ public class SerializeJson : MonoBehaviour
             if(saveData.server)
             {
                 //playerTransform = true;
-                if (sendP1)
-                {
-                    string json = JsonUtility.ToJson(player1);
-                    byte[] data = Encoding.ASCII.GetBytes(json);
+                string json = JsonUtility.ToJson(player1);
+                byte[] data = Encoding.ASCII.GetBytes(json);
 
-                    //Debug.Log(saveData.socket);
-                    //Debug.Log(saveData.Remote);
-                    saveData.socket.SendTo(data, data.Length, SocketFlags.None, saveData.Remote[0]);
-                    sendP1 = false;
-                }
+                //Debug.Log(saveData.socket);
+                //Debug.Log(saveData.Remote);
+                saveData.socket.SendTo(data, data.Length, SocketFlags.None, saveData.Remote[1]);
                
-                if(sendP2)
-                {
-                    string json_ = JsonUtility.ToJson(player2);
-                    byte[] data_ = Encoding.ASCII.GetBytes(json_);
+                string json_ = JsonUtility.ToJson(player2);
+                byte[] data_ = Encoding.ASCII.GetBytes(json_);
 
-                    //Debug.Log(saveData.socket);
-                    //Debug.Log(saveData.Remote);
-                    saveData.socket.SendTo(data_, data_.Length, SocketFlags.None, saveData.Remote[1]);
-                    sendP2 = false;
-                }
+                //Debug.Log(saveData.socket);
+                //Debug.Log(saveData.Remote);
+                saveData.socket.SendTo(data_, data_.Length, SocketFlags.None, saveData.Remote[0]);
                 
             }
             else
@@ -145,29 +145,24 @@ public class SerializeJson : MonoBehaviour
 
                 //Debug.Log(saveData.socket);
                 //Debug.Log(saveData.Remote);
-                int recv = saveData.socket.ReceiveFrom(data, ref saveData.Remote[0]);
+                int recv = saveData.socket.ReceiveFrom(data, ref remote);
 
                 string json = Encoding.ASCII.GetString(data, 0, recv);
 
                 // Decerialize JSON back to player date
-                player1 = JsonUtility.FromJson<PlayerData>(json);
+                playerData = JsonUtility.FromJson<PlayerData>(json);
+
+                if (playerData.playerNum == 1)
+                {
+                    player1 = playerData;
+                }
+                else
+                {
+                    player2 = playerData;
+                }
+                
+                
                 //Debug.Log(deserializedPlayer.PlayerPos);  // Output: Pos
-
-                sendP1 = true;
-
-                byte[] data_ = new byte[1024];
-
-                //Debug.Log(saveData.socket);
-                //Debug.Log(saveData.Remote);
-                int recv_ = saveData.socket.ReceiveFrom(data_, ref saveData.Remote[1]);
-
-                string json_ = Encoding.ASCII.GetString(data_, 0, recv_);
-
-                // Decerialize JSON back to player date
-                player2 = JsonUtility.FromJson<PlayerData>(json_);
-                //Debug.Log(deserializedPlayer.PlayerPos);  // Output: Pos
-
-                sendP2 = true;
             }
             else
             {
