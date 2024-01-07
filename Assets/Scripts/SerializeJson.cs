@@ -33,7 +33,7 @@ public class SerializeJson : MonoBehaviour
     PlayerData deserializedPlayer;
     PlayerData player1;
     PlayerData player2;
-
+    bool serverUpdate = false;
     EndPoint remote;
 
     private void Start()
@@ -70,6 +70,7 @@ public class SerializeJson : MonoBehaviour
             Destroy(PlayerEnemy.GetComponent<KeyboardInput>());
             Destroy(PlayerEnemy.GetComponent<KartAnimation>());
             Destroy(PlayerEnemy.GetComponent<KartPlayerAnimator>());
+            Destroy(GameObject.FindGameObjectWithTag("ServerCanvas"));
         }
         else
         {
@@ -103,6 +104,15 @@ public class SerializeJson : MonoBehaviour
             PlayerEnemy.transform.position = deserializedPlayer.PlayerPos;
             PlayerEnemy.transform.rotation = deserializedPlayer.PlayerRot;
             updateEnemy = false;
+        }
+        if (serverUpdate)
+        {
+            PlayerEnemy.transform.position = player1.PlayerPos;
+            PlayerEnemy.transform.rotation = player1.PlayerRot;
+
+            PlayerDefault.transform.position = player2.PlayerPos;
+            PlayerDefault.transform.rotation = player2.PlayerRot;
+            serverUpdate = false;
         }
     }
 
@@ -171,7 +181,7 @@ public class SerializeJson : MonoBehaviour
                 {
                     player2 = playerData;
                 }
-                
+                serverUpdate = true;
                 
                 //Debug.Log(deserializedPlayer.PlayerPos);  // Output: Pos
             }
