@@ -70,6 +70,7 @@ public class SerializeJson : MonoBehaviour
             Destroy(PlayerEnemy.GetComponent<KeyboardInput>());
             Destroy(PlayerEnemy.GetComponent<KartAnimation>());
             Destroy(PlayerEnemy.GetComponent<KartPlayerAnimator>());
+            Destroy(PlayerEnemy.GetComponent<Rotate>());
             Destroy(GameObject.FindGameObjectWithTag("ServerCanvas"));
         }
         else
@@ -79,6 +80,7 @@ public class SerializeJson : MonoBehaviour
             Destroy(PlayerEnemy.GetComponent<KartAnimation>());
             Destroy(PlayerEnemy.GetComponent<KartPlayerAnimator>());
             Destroy(PlayerEnemy.GetComponent<ArcadeKart>());
+            Destroy(PlayerEnemy.GetComponent<Rotate>());
         }
 
         remote = (EndPoint)new IPEndPoint(IPAddress.Any, 0);

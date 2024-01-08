@@ -12,6 +12,7 @@ TagManager:
   - ResetCollider
   - CrashMode
   - data
+  - Rot
   layers:
   - Default
   - TransparentFX
