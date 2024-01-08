@@ -10,6 +10,8 @@ TagManager:
   - Camera2
   - ServerCanvas
   - ResetCollider
+  - CrashMode
+  - data
   layers:
   - Default
   - TransparentFX

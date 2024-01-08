@@ -908,7 +908,7 @@ GameObject:
   - component: {fileID: 287037119}
   m_Layer: 0
   m_Name: Server
-  m_TagString: Untagged
+  m_TagString: data
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -956,6 +956,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player2: 0
   player1: 0
+  server: 0
 --- !u!1001 &395762080
 PrefabInstance:
   m_ObjectHideFlags: 0
