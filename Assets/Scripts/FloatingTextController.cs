@@ -5,19 +5,22 @@ using UnityEngine.UI;
 public class FloatingTextController : MonoBehaviour
 {
     public Text floatingText;
-    public string textToDisplay = "Hello!";
+    public string textToDisplay = "";
     public float floatSpeed = 1.0f;
 
-    void Start()
+    private void OnTriggerEnter(Collider other)
     {
-        // Create a copy of the floating text and set its position
-        Text textInstance = Instantiate(floatingText, transform.position, Quaternion.identity);
-        textInstance.transform.SetParent(GameObject.Find("CanvasHolder").transform); // Set the canvas as the parent
-        textInstance.text = textToDisplay;
-        Destroy(textInstance.gameObject, 2.0f); // Destroy the floating text after 2 seconds
+        if (other.CompareTag("Active"))
+        {
+            textToDisplay = "Win";
+            Text textInstance = Instantiate(floatingText, transform.position, Quaternion.identity);
+            textInstance.transform.SetParent(GameObject.Find("CanvasHolder").transform); // Set the canvas as the parent
+            textInstance.text = textToDisplay;
+            Destroy(textInstance.gameObject, 2.0f); // Destroy the floating text after 2 seconds
 
-        // Add a floating animation (optional)
-        StartCoroutine(FloatText(textInstance));
+            // Add a floating animation (optional)
+            StartCoroutine(FloatText(textInstance));
+        }
     }
 
     IEnumerator FloatText(Text textInstance)
