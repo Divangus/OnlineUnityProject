@@ -39,7 +39,7 @@ public class SerializeJson : MonoBehaviour
     public GameObject Audio;
     private void Start()
     {
-        AudioListener audioListener = Audio.GetComponent<AudioListener>();
+        //AudioListener audioListener = Audio.GetComponent<AudioListener>();
         saveData = FindObjectOfType<SaveData>();
         playerData = new PlayerData();
 
@@ -74,7 +74,7 @@ public class SerializeJson : MonoBehaviour
             Destroy(PlayerEnemy.GetComponent<KartPlayerAnimator>());
             Destroy(PlayerEnemy.GetComponent<Rotate>());
             //Destroy(GameObject.FindGameObjectWithTag("ServerCanvas"));
-            Destroy(audioListener);
+            //Destroy(audioListener);
         }
         else
         {
