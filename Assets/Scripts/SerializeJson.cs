@@ -36,8 +36,10 @@ public class SerializeJson : MonoBehaviour
     bool serverUpdate = false;
     EndPoint remote;
 
+    public GameObject Audio;
     private void Start()
     {
+        AudioListener audioListener = Audio.GetComponent<AudioListener>();
         saveData = FindObjectOfType<SaveData>();
         playerData = new PlayerData();
 
@@ -71,7 +73,8 @@ public class SerializeJson : MonoBehaviour
             Destroy(PlayerEnemy.GetComponent<KartAnimation>());
             Destroy(PlayerEnemy.GetComponent<KartPlayerAnimator>());
             Destroy(PlayerEnemy.GetComponent<Rotate>());
-            Destroy(GameObject.FindGameObjectWithTag("ServerCanvas"));
+            //Destroy(GameObject.FindGameObjectWithTag("ServerCanvas"));
+            Destroy(audioListener);
         }
         else
         {

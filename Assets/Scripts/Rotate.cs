@@ -3,7 +3,7 @@ using UnityEngine;
 public class Rotate : MonoBehaviour
 {
     // Set this to the speed at which you want the rotation to occur
-    public float rotationSpeed = 180f;
+    public float rotationSpeed = 720f;
     private float startTime;
 
     private bool isRotating = false;
@@ -30,7 +30,7 @@ public class Rotate : MonoBehaviour
             transform.Rotate(Vector3.up, rotationAmount);
 
             // Check if 1.5 seconds have passed
-            if (Time.time - startTime >= 1.5f)
+            if (Time.time - startTime >= 3f)
             {
                 // Stop rotating after 1.5 seconds
                 isRotating = false;
